@@ -67,18 +67,7 @@ GOOGLE_API_KEY=your_google_api_key_here
 > **注意:** Docker Compose の `env_file` ディレクティブにより、`.env` の内容はコンテナの環境変数として注入されます。
 > バックエンド内の `load_dotenv()` はローカル開発用のフォールバックです。
 
-### 3. データディレクトリの作成
-
-ChromaDB のデータ永続化用ディレクトリを作成:
-
-```bash
-mkdir -p data/chroma_db
-```
-
-> このディレクトリは `docker-compose.yml` で `./data:/app/data` としてコンテナにマウントされます。
-> 初回起動時に ChromaDB が専門知識ベースを自動でインデックス化します。
-
-### 4. 起動
+### 3. 起動
 
 ```bash
 docker compose up --build
@@ -144,14 +133,14 @@ project_trainer/
 │   │   ├── planner/      # トレーニングプラン生成エージェント
 │   │   ├── orchestrator/ # Analyzer → Planner のパイプライン統合
 │   │   └── common/       # 共通モジュール（LLM, ChromaDB, state）
+│   ├── data/
+│   │   └── chroma_db/    # ChromaDB データ（自動生成・git 管理外）
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
 │   │   ├── components/   # React UI コンポーネント
 │   │   └── services/     # API 通信（axios）
 │   └── Dockerfile
-├── data/
-│   └── chroma_db/        # ChromaDB データ（自動生成・git 管理外）
 ├── .env                  # 環境変数（git 管理外）
 ├── docker-compose.yml
 ├── nginx.conf

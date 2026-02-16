@@ -51,7 +51,15 @@ AIがInBodyデータとユーザー情報を分析し、パーソナライズさ
 GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-### 2. Docker Composeで起動
+### 2. データディレクトリの作成
+
+ChromaDB用のディレクトリを作成:
+
+```bash
+mkdir -p data/chroma_db
+```
+
+### 3. Docker Composeで起動
 
 ```bash
 docker compose up --build
@@ -104,6 +112,8 @@ project_trainer/
 │   │   ├── components/ # React UIコンポーネント
 │   │   └── services/   # API通信
 │   └── Dockerfile
+├── data/
+│   └── chroma_db/      # ChromaDBデータ（自動生成・git管理外）
 ├── docker-compose.yml
 ├── nginx.conf
 └── requirements.txt

@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(17, 24, 39, 0.87);
+  background-color: #f8fafc;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ====================== Print Styles ====================== */
+@media print {
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+
+  .page-background {
+    background: white !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* Container: full width for paper */
+  .MuiContainer-root {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Paper: remove shadow for cleaner print */
+  .MuiPaper-root {
+    box-shadow: none !important;
+    border: 1px solid #e0e0e0 !important;
+  }
+
+  /* Force all MUI Accordions open */
+  .MuiCollapse-root {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    visibility: visible !important;
+  }
+
+  .MuiCollapse-wrapper,
+  .MuiCollapse-wrapperInner {
+    height: auto !important;
+  }
+
+  .MuiAccordionSummary-expandIconWrapper {
+    display: none !important;
+  }
+
+  /* Typography: scale down headings for print */
+  .MuiTypography-h5 {
+    font-size: 16px !important;
+  }
+
+  .MuiTypography-h6 {
+    font-size: 14px !important;
+  }
+
+  .MuiTypography-body1 {
+    font-size: 12px !important;
+  }
+
+  .MuiTypography-body2,
+  .MuiTypography-caption {
+    font-size: 11px !important;
+  }
+
+  /* Tables: visible borders and fit to page */
+  .MuiTableCell-root {
+    border: 1px solid #ccc !important;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .MuiTableHead-root .MuiTableCell-root {
+    background-color: #6366f1 !important;
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .print-page-break-before {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* Chip: ensure border visibility */
+  .MuiChip-outlined {
+    border: 1px solid currentColor !important;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  @page {
+    margin: 15mm;
+    size: A4;
+  }
+}

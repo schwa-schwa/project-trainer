@@ -37,53 +37,90 @@ AIがInBodyデータとユーザー情報を分析し、パーソナライズさ
                               レスポンス → React UI
 ```
 
-## セットアップ
+## セットアップ（Docker）
 
 ### 前提条件
 - Docker / Docker Compose
 - Google API Key（Gemini API用）
 
-### 1. 環境変数の設定
+### 1. リポジトリのクローン
 
-プロジェクトルートに`.env`ファイルを作成:
+```bash
+git clone git@github.com:schwa-schwa/project-trainer.git
+cd project-trainer
+```
+
+### 2. 環境変数の設定
+
+プロジェクトルートに `.env` ファイルを作成:
+
+```bash
+cp .env.example .env
+```
+
+`.env` を編集して API Key を設定:
 
 ```env
 GOOGLE_API_KEY=your_google_api_key_here
 ```
 
-### 2. データディレクトリの作成
+> **注意:** Docker Compose の `env_file` ディレクティブにより、`.env` の内容はコンテナの環境変数として注入されます。
+> バックエンド内の `load_dotenv()` はローカル開発用のフォールバックです。
 
-ChromaDB用のディレクトリを作成:
+### 3. データディレクトリの作成
+
+ChromaDB のデータ永続化用ディレクトリを作成:
 
 ```bash
 mkdir -p data/chroma_db
 ```
 
-### 3. Docker Composeで起動
+> このディレクトリは `docker-compose.yml` で `./data:/app/data` としてコンテナにマウントされます。
+> 初回起動時に ChromaDB が専門知識ベースを自動でインデックス化します。
+
+### 4. 起動
 
 ```bash
 docker compose up --build
 ```
 
-アプリケーションが http://localhost で利用可能になります。
+http://localhost でアプリケーションにアクセスできます。
 
-### ローカル開発（Docker不使用）
+### コンテナ構成
 
-**バックエンド:**
+| サービス | ポート | 役割 |
+|---------|-------|------|
+| nginx | 80 | リバースプロキシ（`/api/` → backend, `/` → frontend） |
+| backend | 8000（内部） | Django API サーバー |
+| frontend | 5173（内部） | Vite 開発サーバー |
+
+## セットアップ（ローカル開発）
+
+Docker を使わずに開発する場合:
+
+### バックエンド
 
 ```bash
+# 依存関係のインストール
 pip install -r requirements.txt
+
+# .env はプロジェクトルートに配置（config.py が自動で読み込み）
+# 起動
 cd backend
+python manage.py migrate
 python manage.py runserver
 ```
 
-**フロントエンド:**
+### フロントエンド
 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+
+> ローカル開発時、フロントエンドは `http://localhost:5173`、バックエンドは `http://localhost:8000` で動作します。
+> CORS 設定により両ポートからのアクセスが許可されています。
 
 ## API エンドポイント
 
@@ -99,21 +136,23 @@ npm run dev
 ```
 project_trainer/
 ├── backend/
-│   ├── api/            # Django REST API
-│   ├── config/         # Django設定
+│   ├── api/              # Django REST API（views, serializers）
+│   ├── config/           # Django 設定（settings, urls）
 │   ├── core/
-│   │   ├── analyzer/   # InBodyデータ分析エージェント
-│   │   ├── planner/    # トレーニングプラン生成エージェント
-│   │   ├── orchestrator/ # エージェント統合
-│   │   └── common/     # 共通ユーティリティ（LLM, state, retriever）
+│   │   ├── analyzer/     # InBody データ分析エージェント
+│   │   │   └── knowledge/  # 専門知識ベース（Markdown）
+│   │   ├── planner/      # トレーニングプラン生成エージェント
+│   │   ├── orchestrator/ # Analyzer → Planner のパイプライン統合
+│   │   └── common/       # 共通モジュール（LLM, ChromaDB, state）
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
-│   │   ├── components/ # React UIコンポーネント
-│   │   └── services/   # API通信
+│   │   ├── components/   # React UI コンポーネント
+│   │   └── services/     # API 通信（axios）
 │   └── Dockerfile
 ├── data/
-│   └── chroma_db/      # ChromaDBデータ（自動生成・git管理外）
+│   └── chroma_db/        # ChromaDB データ（自動生成・git 管理外）
+├── .env                  # 環境変数（git 管理外）
 ├── docker-compose.yml
 ├── nginx.conf
 └── requirements.txt
